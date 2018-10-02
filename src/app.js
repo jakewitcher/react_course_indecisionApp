@@ -1,25 +1,51 @@
 console.log('app.js is running');
 
-//JSX - JavaScript XML
-var template = (
+const app = {
+    title: 'Indecision App',
+    subtitle: 'This is a subtitle',
+    options: ['One', 'Two']
+}
+
+const template = (
     <div>
-        <h1>Indecision App</h1>
-        <p>This is some info</p>
+        <h1>{app.title}</h1>
+        {app.subtitle && <p>{app.subtitle}</p>}
+        <p>{app.options.length > 0 ? 'Here are your options' : 'No options'}</p>
         <ol>
-            <li>Item One</li>
-            <li>Item Two</li>
+            <li>Line Item One</li>
+            <li>Line Item Two</li>
         </ol>
     </div>
 );
 
-var templateTwo = (
-    <div>
-        <h1>Sam</h1>
-        <p>Age: 34</p>
-        <p>Location: West Palm Beach, FL</p>
-    </div>
-);
+let count = 0;
 
-var appRoot = document.getElementById('app');
+const addOne = () => {
+    count++;
+    renderCounterApp();
+}
+const minusOne = () => {
+    count--;
+    renderCounterApp();
+}
+const reset = () => {
+    count = 0;
+    renderCounterApp();
+}
 
-ReactDOM.render(templateTwo, appRoot);
+
+const appRoot = document.getElementById('app');
+
+const renderCounterApp = () => {
+    const templateTwo = (
+        <div>
+            <h1>Count: {count}</h1>
+            <button onClick={addOne}>+1</button>
+            <button onClick={minusOne}>-1</button>
+            <button onClick={reset}>Reset</button>
+        </div>
+    );
+    ReactDOM.render(templateTwo, appRoot);
+};
+
+renderCounterApp();
