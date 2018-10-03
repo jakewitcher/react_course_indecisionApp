@@ -3,49 +3,56 @@ console.log('app.js is running');
 const app = {
     title: 'Indecision App',
     subtitle: 'This is a subtitle',
-    options: ['One', 'Two']
-}
+    options: [],
+    chosenOption: ''
+};
 
-const template = (
-    <div>
-        <h1>{app.title}</h1>
-        {app.subtitle && <p>{app.subtitle}</p>}
-        <p>{app.options.length > 0 ? 'Here are your options' : 'No options'}</p>
-        <ol>
-            <li>Line Item One</li>
-            <li>Line Item Two</li>
-        </ol>
-    </div>
-);
+const onFormSubmit = (e) => {
+    e.preventDefault();
+    
+    let option = e.target.elements.option.value;
 
-let count = 0;
+    if (option) {
+        app.options.push(option);
+        e.target.elements.option.value = '';
+        render();
+    }
+};
 
-const addOne = () => {
-    count++;
-    renderCounterApp();
-}
-const minusOne = () => {
-    count--;
-    renderCounterApp();
-}
-const reset = () => {
-    count = 0;
-    renderCounterApp();
-}
+const onRemoveAll = () => {
+    app.options = [];
+    render();
+};
 
+const onMakeDecision = () => {
+    const randomNum = Math.floor(app.options.length * Math.random());
+    app.chosenOption = app.options[randomNum];
+    render();
+}
 
 const appRoot = document.getElementById('app');
 
-const renderCounterApp = () => {
-    const templateTwo = (
+const render = () => {
+    const template = (
         <div>
-            <h1>Count: {count}</h1>
-            <button onClick={addOne}>+1</button>
-            <button onClick={minusOne}>-1</button>
-            <button onClick={reset}>Reset</button>
+            <h1>{app.title}</h1>
+            {app.subtitle && <p>{app.subtitle}</p>}
+            <p>{app.options.length > 0 ? 'Here are your options' : 'No options'}</p>
+            <button disabled={app.options.length === 0} onClick={onMakeDecision}>What should I do?</button>
+            <p>{app.chosenOption}</p>
+            <button onClick={onRemoveAll}>Remove All</button>
+            <ol>
+                {
+                    app.options.map(option => <li key={option}>{option}</li>)
+                }
+            </ol>
+            <form onSubmit={onFormSubmit}>
+                <input type="text" name="option"/>
+                <button>Add Option</button>
+            </form>
         </div>
     );
-    ReactDOM.render(templateTwo, appRoot);
-};
+    ReactDOM.render(template, appRoot);
+}
 
-renderCounterApp();
+render();
